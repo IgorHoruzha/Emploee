@@ -14,7 +14,7 @@ public class NoteDAO implements IFile {
 
     String fileName1="./NotesGood.json";
     String fileName2="./NotesWithoutId.json";
-    String fileName3="./NotesWithoutMessage.json";
+
     FileWriter oos;
     FileReader ois;
 
@@ -119,9 +119,7 @@ public class NoteDAO implements IFile {
 
         if (n.getId() < 0) {
             fileName = fileName2;
-        } else if (n.getMessage() == null) {
-            fileName = fileName3;
-        } else {
+        }  else {
             fileName = fileName1;
         }
         return fileName;
@@ -131,6 +129,6 @@ public class NoteDAO implements IFile {
     public void clearAll() throws IOException {
         writeAll(new ArrayList<Note>(), fileName1);
         writeAll(new ArrayList<Note>(), fileName2);
-        writeAll(new ArrayList<Note>(), fileName3);
+
     }
 }
