@@ -12,34 +12,36 @@ import java.util.Scanner;
 
 public class NoteDAO implements IFile {
 
-    String fileName="./Notes.json";
+    String fileName1="./NotesGood.json";
+    String fileName2="./NotesWithoutId.json";
+    String fileName3="./NotesWithoutMessage.json";
     FileWriter oos;
     FileReader ois;
 
-
     @Override
     public void write(Note n) throws IOException {
-        ArrayList<Note> notes = read();
+        String fileName = getFileNameByObject(n);
+
+        ArrayList<Note> notes = read(fileName);
         notes.add(n);
-        writeAll(notes);
+        writeAll(notes,fileName);
 
     }
 
-    public  void writeAll(ArrayList<Note> notes ) throws IOException {
-        openWriteStream();
+    public  void writeAll(ArrayList<Note> notes, String fileName ) throws IOException {
+        openWriteStream(fileName);
         Gson gson = new Gson();
         String json = gson.toJson(notes);
-        oos = new FileWriter(fileName);
         oos.write(json);
         oos.close();
         closeWriteStream();
     }
 
     @Override
-    public ArrayList<Note> read()  {
+    public ArrayList<Note> read(String fileName)  {
         ArrayList<Note> notes=new ArrayList<Note>();
         try {
-            openReadStream();
+            openReadStream(fileName);
 
             Scanner myReader = new Scanner(ois);
             StringBuilder data= new StringBuilder();
@@ -58,7 +60,7 @@ public class NoteDAO implements IFile {
     }
 
     @Override
-    public void openReadStream() throws IOException {
+    public void openReadStream(String fileName) throws IOException {
          ois = new FileReader(fileName);
     }
 
@@ -68,7 +70,7 @@ public class NoteDAO implements IFile {
     }
 
     @Override
-    public void openWriteStream() throws IOException {
+    public void openWriteStream(String fileName) throws IOException {
         oos = new FileWriter(fileName);
     }
 
@@ -79,13 +81,16 @@ public class NoteDAO implements IFile {
 
     @Override
     public boolean update(Note n) throws IOException {
-        ArrayList<Note> notes = read();
+
+        String fileName = getFileNameByObject(n);
+
+        ArrayList<Note> notes = read(fileName);
         int index= notes.indexOf(n);
 
         if (index!=-1) {
             Note currentNote = notes.get(index);
             currentNote.setMessage(n.getMessage());
-            writeAll(notes);
+            writeAll(notes,fileName);
             return  true;
         }
 
@@ -94,12 +99,14 @@ public class NoteDAO implements IFile {
 
     @Override
     public boolean delete(Note n) throws IOException {
-        ArrayList<Note> notes = read();
+        String fileName = getFileNameByObject(n);
+
+        ArrayList<Note> notes = read(fileName);
         int index= notes.indexOf(n);
 
         if (index!=-1) {
             notes.remove(index);
-            writeAll(notes);
+            writeAll(notes,fileName);
 
             return  true;
         }
@@ -107,9 +114,23 @@ public class NoteDAO implements IFile {
         return false;
     }
 
+    private String getFileNameByObject(Note n) {
+        String fileName;
+
+        if (n.getId() < 0) {
+            fileName = fileName2;
+        } else if (n.getMessage() == null) {
+            fileName = fileName3;
+        } else {
+            fileName = fileName1;
+        }
+        return fileName;
+    }
+
     @Override
     public void clearAll() throws IOException {
-
-        writeAll(new ArrayList<Note>());
+        writeAll(new ArrayList<Note>(), fileName1);
+        writeAll(new ArrayList<Note>(), fileName2);
+        writeAll(new ArrayList<Note>(), fileName3);
     }
 }
