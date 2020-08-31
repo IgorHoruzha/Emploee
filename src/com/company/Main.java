@@ -4,6 +4,7 @@ import com.company.dao.accessobjects.NoteDAO;
 import com.company.dao.models.Note;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,7 +18,7 @@ public class Main {
             noteDAO.write(new Note(3, "Message3"));
             noteDAO.write(new Note(4, "Message4"));
 
-            var allNotes = noteDAO.read();
+            ArrayList<Note> allNotes = noteDAO.read();
             for (Note item : allNotes) {
                 System.out.println(item.toString());
             }

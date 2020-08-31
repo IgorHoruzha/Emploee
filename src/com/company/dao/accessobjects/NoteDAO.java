@@ -68,7 +68,7 @@ public class NoteDAO implements IFile {
         int index= notes.indexOf(n);
 
         if (index!=-1) {
-            var currentNote = notes.get(index);
+            Note currentNote = notes.get(index);
             currentNote.setMessage(n.getMessage());
             writeAll(notes);
             return  true;
