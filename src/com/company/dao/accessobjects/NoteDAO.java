@@ -2,8 +2,11 @@ package com.company.dao.accessobjects;
 
 import com.company.dao.interfaces.IFile;
 import com.company.dao.models.Note;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class NoteDAO implements IFile {
@@ -22,7 +25,9 @@ public class NoteDAO implements IFile {
 
     public  void writeAll(ArrayList<Note> notes ) throws IOException {
         openWriteStream();
-        oos.writeObject(notes);
+        Gson gson = new Gson();
+        String json = gson.toJson(notes);
+        oos.writeObject(json);
         closeWriteStream();
     }
 
@@ -31,7 +36,10 @@ public class NoteDAO implements IFile {
         ArrayList<Note> notes=new ArrayList<Note>();
         try {
             openReadStream();
-            notes=((ArrayList<Note>)ois.readObject());
+            String data= String.valueOf(ois.readObject());
+            Gson gson = new Gson();
+            Type datasetListType = new TypeToken<ArrayList<Note> >() {}.getType();
+            notes=gson.fromJson(data, datasetListType);
             closeReadStream();
         } catch (ClassNotFoundException e) {
             return  notes;
