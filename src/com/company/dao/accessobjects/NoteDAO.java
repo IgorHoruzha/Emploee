@@ -8,12 +8,14 @@ import com.google.gson.reflect.TypeToken;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class NoteDAO implements IFile {
 
     String fileName="./Notes.json";
-    ObjectOutputStream oos;
-    ObjectInputStream ois;
+    FileWriter oos;
+    FileReader ois;
+
 
     @Override
     public void write(Note n) throws IOException {
@@ -27,7 +29,9 @@ public class NoteDAO implements IFile {
         openWriteStream();
         Gson gson = new Gson();
         String json = gson.toJson(notes);
-        oos.writeObject(json);
+        oos = new FileWriter(fileName);
+        oos.write(json);
+        oos.close();
         closeWriteStream();
     }
 
@@ -36,13 +40,16 @@ public class NoteDAO implements IFile {
         ArrayList<Note> notes=new ArrayList<Note>();
         try {
             openReadStream();
-            String data= String.valueOf(ois.readObject());
+
+            Scanner myReader = new Scanner(ois);
+            StringBuilder data= new StringBuilder();
+            while (myReader.hasNextLine()) {
+                data.append(myReader.nextLine());
+            }
             Gson gson = new Gson();
             Type datasetListType = new TypeToken<ArrayList<Note> >() {}.getType();
-            notes=gson.fromJson(data, datasetListType);
+            notes=gson.fromJson(data.toString(), datasetListType);
             closeReadStream();
-        } catch (ClassNotFoundException e) {
-            return  notes;
         } catch (IOException e) {
             return  notes;
         }
@@ -52,7 +59,7 @@ public class NoteDAO implements IFile {
 
     @Override
     public void openReadStream() throws IOException {
-         ois = new ObjectInputStream(new FileInputStream(fileName));
+         ois = new FileReader(fileName);
     }
 
     @Override
@@ -62,7 +69,7 @@ public class NoteDAO implements IFile {
 
     @Override
     public void openWriteStream() throws IOException {
-        oos = new ObjectOutputStream(new FileOutputStream(fileName));
+        oos = new FileWriter(fileName);
     }
 
     @Override

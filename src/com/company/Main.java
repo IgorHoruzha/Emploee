@@ -44,7 +44,7 @@ public class Main {
             System.out.println();
             //============================================= Clear all
 
-            noteDAO.clearAll();
+           // noteDAO.clearAll();
             allNotes = noteDAO.read();
             for (Note allNote : allNotes) {
                 System.out.println(allNote.toString());
