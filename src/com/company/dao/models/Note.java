@@ -3,22 +3,16 @@ package com.company.dao.models;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Note  implements Serializable {
-    int id;
+public class Note extends CommonData implements Serializable {
+
     String message;
 
     public Note(int id, String message) {
-        this.id = id;
+        super(id);
+
         this.message = message;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getMessage() {
         return message;

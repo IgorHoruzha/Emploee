@@ -1,6 +1,6 @@
 package com.company.dao.accessobjects;
 
-import com.company.dao.interfaces.IFile;
+import com.company.dao.interfaces.File.IFile;
 import com.company.dao.models.Note;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
